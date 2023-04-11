@@ -1,23 +1,26 @@
+// Basic Requirements
 const express = require('express');
-const { engine } = require('express-handlebars');
-const handlebars = require('express-handlebars');
-require ('dotenv').config();
-PORT = process.env.PORT;
+const exphbs = require('express-handlebars');
+require('dotenv').config();
+PORT = process.env.PORT; 
 
-// Register the nav partial
-handlebars.create({ 
-    partialsDir: ['layouts/']
-  }).partialsDir = __dirname + '/layouts';
-
+// App
 const app = express();
+app.use(express.static('public'));
 
-app.engine('handlebars', engine());
+// DB
+require('./data/reddit-db');
+
+// Middleware
+app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
-    res.render('home');
-});
+// Controllers
+require('./controllers/posts')(app)
 
+// Server
 app.listen(PORT);
 console.log('Server is running on port 3002');
