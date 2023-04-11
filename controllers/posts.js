@@ -4,7 +4,9 @@ module.exports = (app) => {
 
   // Root path
   app.get('/', (req, res) => {
-    res.render('home');
+    Post.find({}).lean()
+    .then((posts) => res.render('posts-index', { posts }))
+    .catch(err => console.log(err));
   });
 
   // New Post
