@@ -17,15 +17,16 @@ module.exports = (app) => {
     res.render('posts-new');
   });
 
-  // Create
-  app.post('/posts/new', (req, res) => {
+  // Create Post
+  app.post('/posts/new', async (req, res) => {
     const post = new Post(req.body);
-
-    post.save()
-      .then(() => {
-        res.redirect('/')
-      })
-      .catch(err => console.log(err))
+  
+    try {
+      await post.save();
+      res.redirect('/');
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   // Show Post
