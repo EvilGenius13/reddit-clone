@@ -39,4 +39,14 @@ module.exports = (app) => {
     }
   });
 
+  // Subreddit
+  app.get('/n/:subreddit', async (req, res) => {
+    try {
+      const posts = await Post.find({ subreddit: req.params.subreddit }).lean();
+      res.render('posts-index', { posts });
+    } catch (err) {
+      console.log(err.message);
+    }
+  });
+
 };
