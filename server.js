@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Controllers
 require('./controllers/posts')(app)
+require('./controllers/comments')(app)
 
 // Server
 app.listen(PORT);
