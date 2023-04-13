@@ -20,7 +20,11 @@ app.use(express.urlencoded({ extended: false }));
 
 // Controllers
 require('./controllers/posts')(app)
+require('./controllers/comments')(app)
 
 // Server
 app.listen(PORT);
 console.log('Server is running on port 3002');
+
+// Export app for testing
+module.exports = app;
