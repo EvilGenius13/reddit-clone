@@ -36,6 +36,9 @@ module.exports = (app) => {
     res.redirect('/');
   });
 
+  // LOGIN
+  app.get('/login', (req, res) => res.render('login'));
+  
   // LOGIN FORM
   app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -64,5 +67,5 @@ module.exports = (app) => {
       console.log(err);
     }
   });
-  
+
 };
