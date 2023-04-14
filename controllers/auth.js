@@ -19,7 +19,7 @@ module.exports = (app) => {
       // Set cookie
       res.cookie('nToken', token, { maxAge: 900000, httpOnly: true });
       res.redirect('/');
-      
+
     } catch (err) {
       if (err.name === 'MongoError' && err.code === 11000) {
         // Duplicate key error - username already taken
@@ -29,5 +29,13 @@ module.exports = (app) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+  // LOGOUT
+  app.get('/logout', (req, res) => {
+    res.clearCookie('nToken');
+    res.redirect('/');
+  });
+
+  
 
 };
