@@ -1,12 +1,14 @@
 // Basic Requirements
 const express = require('express');
 const exphbs = require('express-handlebars');
+const cookieparser = require('cookie-parser');
 require('dotenv').config();
 PORT = process.env.PORT; 
 
 // App
 const app = express();
 app.use(express.static('public'));
+app.use(cookieparser());
 
 // DB
 require('./data/reddit-db');
@@ -21,6 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 // Controllers
 require('./controllers/posts')(app)
 require('./controllers/comments')(app)
+require('./controllers/auth.js')(app);
 
 // Server
 app.listen(PORT);
