@@ -1,4 +1,6 @@
 const Post = require('../models/post');
+const Comment = require('../models/comment');
+const User = require('../models/user');
 const checkAuth = require('../middleware/checkAuth');
 
 module.exports = (app) => {
@@ -8,7 +10,7 @@ module.exports = (app) => {
   // Root path
   app.get('/', async (req, res) => {
     try {
-      const posts = await Post.find({}).lean();
+      const posts = await Post.find({}).lean().populate('author');
       const currentUser = req.user;
       return res.render('posts-index', { posts, currentUser });
     } catch (err) {
@@ -27,21 +29,35 @@ module.exports = (app) => {
 
   // Create Post
   app.post('/posts/new', checkAuth, async (req, res) => {
-    const post = new Post(req.body);
-  
     try {
-      await post.save();
-      res.redirect('/');
+      if (req.user) {
+        const userId = req.user._id;
+        const post = new Post(req.body);
+        post.author = userId;
+  
+        await post.save();
+        
+        const user = await User.findById(userId);
+        user.posts.unshift(post);
+        await user.save();
+  
+        // REDIRECT TO THE NEW POST
+        return res.redirect(`/posts/${post._id}`);
+      } else {
+        return res.status(401).send('Unauthorized');
+      }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   });
 
   // Show Post
   app.get('/posts/:id', async (req, res) => {
+    const currentUser = req.user;
+  
     try {
-      const post = await Post.findById(req.params.id).lean().populate('comments')
-      .then((post) => res.render('posts-show', { post }))
+      const post = await Post.findById(req.params.id).lean().populate('comments').populate('author');
+      return res.render('posts-show', { post, currentUser });
     } catch (err) {
       console.log(err.message);
     }
@@ -49,9 +65,11 @@ module.exports = (app) => {
 
   // Subreddit
   app.get('/n/:subreddit', async (req, res) => {
+    const currentUser = req.user;
+
     try {
-      const posts = await Post.find({ subreddit: req.params.subreddit }).lean();
-      res.render('posts-index', { posts });
+      const posts = await Post.find({ subreddit: req.params.subreddit }).lean().populate('author');
+      res.render('posts-index', { posts, currentUser });
     } catch (err) {
       console.log(err.message);
     }
