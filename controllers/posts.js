@@ -1,24 +1,32 @@
 const Post = require('../models/post');
+const checkAuth = require('../middleware/checkAuth');
 
 module.exports = (app) => {
+  // Apply the checkAuth middleware to all routes in this file
+  app.use(checkAuth);
 
   // Root path
   app.get('/', async (req, res) => {
     try {
       const posts = await Post.find({}).lean();
-      return res.render('posts-index', { posts });
+      const currentUser = req.user;
+      return res.render('posts-index', { posts, currentUser });
     } catch (err) {
       console.log(err.message);
     }
   });
 
   // New Post
-  app.get('/posts/new', (req, res) => {
-    res.render('posts-new');
+  app.get('/posts/new', checkAuth, (req, res) => {
+    if (req.user) {
+      res.render('posts-new');
+    } else {
+      return res.status(401).send('Unauthorized'); // UNAUTHORIZED
+    }
   });
 
   // Create Post
-  app.post('/posts/new', async (req, res) => {
+  app.post('/posts/new', checkAuth, async (req, res) => {
     const post = new Post(req.body);
   
     try {
@@ -48,5 +56,6 @@ module.exports = (app) => {
       console.log(err.message);
     }
   });
-
 };
+
+// Stopped at Product so far
