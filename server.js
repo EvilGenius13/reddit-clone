@@ -2,6 +2,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const cookieparser = require('cookie-parser');
+const checkAuth = require('./middleware/checkAuth');
 require('dotenv').config();
 PORT = process.env.PORT; 
 
@@ -19,11 +20,13 @@ app.set('view engine', 'handlebars');
 app.set('views', './views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(checkAuth);
 
 // Controllers
 require('./controllers/posts')(app)
 require('./controllers/comments')(app)
 require('./controllers/auth.js')(app);
+require('./controllers/user.js')(app);
 
 // Server
 app.listen(PORT);
