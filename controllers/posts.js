@@ -75,5 +75,3 @@ module.exports = (app) => {
     }
   });
 };
-
-// Stopped at Product so far

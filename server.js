@@ -26,6 +26,7 @@ app.use(checkAuth);
 require('./controllers/posts')(app)
 require('./controllers/comments')(app)
 require('./controllers/auth.js')(app);
+require('./controllers/user.js')(app);
 
 // Server
 app.listen(PORT);

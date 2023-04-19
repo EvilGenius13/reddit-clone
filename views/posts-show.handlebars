@@ -3,6 +3,8 @@
     <a href="{{post.url}}" class="lead">{{post.title}}</a>
     <p>{{post.summary}}</p>
     <p>{{post.author.username}}</p>
+    {{!-- Fix Up Later --}}
+    <a href="/users/{{ post.author.username }}">{{ post.author.username }}</a>
     <form action="/posts/{{post._id}}/comments" method="post">
       <textarea class='form-control' name="content" placeholder="Comment"></textarea>
       <div class="text-right">
