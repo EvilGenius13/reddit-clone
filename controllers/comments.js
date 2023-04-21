@@ -19,7 +19,9 @@ module.exports = (app) => {
       await comment.save();
 
       // FIND PARENT POST
-      const post = await Post.findById(req.params.postId);
+      const [post] = await Promise.all([
+        Post.findById(req.params.postId),
+      ]);
 
       // ADD COMMENT REFERENCE TO POST
       post.comments.unshift(comment);
