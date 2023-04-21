@@ -34,6 +34,9 @@ module.exports = (app) => {
         const userId = req.user._id;
         const post = new Post(req.body);
         post.author = userId;
+        post.upVotes = [];
+        post.downVotes = [];
+        post.voteScore = 0;
   
         await post.save();
         
@@ -56,7 +59,7 @@ module.exports = (app) => {
     const currentUser = req.user;
   
     try {
-      const post = await Post.findById(req.params.id).lean().populate({ path:'comments', populate: { path: 'author' } }).populate('author')
+      const post = await Post.findById(req.params.id).populate('comments').lean();
       return res.render('posts-show', { post, currentUser });
     } catch (err) {
       console.log(err.message);
@@ -68,10 +71,34 @@ module.exports = (app) => {
     const currentUser = req.user;
 
     try {
-      const posts = await Post.find({ subreddit: req.params.subreddit }).lean().populate('author');
+      const posts = await Post.find({ subreddit: req.params.subreddit }).lean()
       res.render('posts-index', { posts, currentUser });
     } catch (err) {
       console.log(err.message);
+    }
+  });
+
+  app.put('/posts/:id/vote-up', async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);
+      post.upVotes.push(req.user._id);
+      post.voteScore += 1;
+      await post.save();
+      return res.status(200);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  
+  app.put('/posts/:id/vote-down', async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);
+      post.downVotes.push(req.user._id);
+      post.voteScore -= 1;
+      await post.save();
+      return res.status(200);
+    } catch (err) {
+      console.log(err);
     }
   });
 };

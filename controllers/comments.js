@@ -19,14 +19,16 @@ module.exports = (app) => {
       await comment.save();
 
       // FIND PARENT POST
-      const post = await Post.findById(req.params.postId);
+      const [post] = await Promise.all([
+        Post.findById(req.params.postId),
+      ]);
 
       // ADD COMMENT REFERENCE TO POST
       post.comments.unshift(comment);
       await post.save();
 
       // REDIRECT TO POST SHOW
-      return res.redirect(`/posts/${post._id}`);
+      return res.redirect(`/posts/${req.params.postId}`);
     } catch (err) {
       console.log(err);
     }
