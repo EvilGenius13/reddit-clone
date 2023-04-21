@@ -22,12 +22,3 @@ describe('site', () => {
       });
   });
 });
-
-// after(() => {
-//   app.close(); // Close the server after running tests
-// });
-
-// // Add the following lines to start the server on a different port (3003)
-// const server = app.listen(3003, () => {
-//   console.log('Server is running on port 3003');
-// });
