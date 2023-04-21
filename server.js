@@ -21,6 +21,7 @@ app.set('views', './views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(checkAuth);
+app.use(express.static('public'));
 
 // Controllers
 require('./controllers/posts')(app)
@@ -28,6 +29,7 @@ require('./controllers/comments')(app)
 require('./controllers/auth.js')(app);
 require('./controllers/user.js')(app);
 require('./controllers/replies.js')(app);
+
 
 // Server
 app.listen(PORT);
