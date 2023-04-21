@@ -27,6 +27,7 @@ require('./controllers/posts')(app)
 require('./controllers/comments')(app)
 require('./controllers/auth.js')(app);
 require('./controllers/user.js')(app);
+require('./controllers/replies.js')(app);
 
 // Server
 app.listen(PORT);

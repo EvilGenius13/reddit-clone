@@ -56,7 +56,7 @@ module.exports = (app) => {
     const currentUser = req.user;
   
     try {
-      const post = await Post.findById(req.params.id).lean()
+      const post = await Post.findById(req.params.id).populate('comments').lean();
       return res.render('posts-show', { post, currentUser });
     } catch (err) {
       console.log(err.message);

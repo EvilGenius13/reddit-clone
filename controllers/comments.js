@@ -28,7 +28,7 @@ module.exports = (app) => {
       await post.save();
 
       // REDIRECT TO POST SHOW
-      return res.redirect(`/posts/${post._id}`);
+      return res.redirect(`/posts/${req.params.postId}`);
     } catch (err) {
       console.log(err);
     }
